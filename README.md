@@ -26,3 +26,9 @@ GitHub에서 바로 실행 가능한 3D 골프 시뮬레이션 샘플입니다.
 - 바람, 바람 방향 UI, 습기/모래/잔디 이펙트
 - 카메라 모드(조준/스윙/팔로우/리플레이)
 - 모드: Practice / Tournament / Challenge
+
+
+---
+
+A game playable directly in the browser, including on iPhone.  
+▶ Play Now: https://soonhakahn.github.io/golf_game/
