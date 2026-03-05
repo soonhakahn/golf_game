@@ -1,0 +1,219 @@
+:root {
+  --bg: radial-gradient(130% 110% at 60% 0%, #1e293b 0%, #0f172a 55%, #020617 100%);
+  --panel: rgba(15, 23, 42, 0.52);
+  --panel-border: rgba(148, 163, 184, 0.4);
+  --text: #f8fafc;
+  --muted: #cbd5e1;
+  --accent: #22c55e;
+  --danger: #ef4444;
+}
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Segoe UI', 'Noto Sans KR', 'Apple SD Gothic Neo', Arial, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+body {
+  position: relative;
+}
+
+#scene-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 40% 18%, rgba(255, 255, 255, 0.06), transparent 40%),
+              radial-gradient(circle at 65% 72%, rgba(255, 255, 255, 0.03), transparent 30%);
+  z-index: 0;
+}
+
+#ui {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  grid-template-rows: auto auto auto 1fr;
+  gap: 12px;
+  align-items: start;
+}
+
+.hud-row {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.panel {
+  pointer-events: auto;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 14px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 12px;
+  width: 280px;
+  box-shadow: 0 16px 30px rgba(2, 6, 23, 0.45);
+}
+
+.panel h1 {
+  margin: 0 0 8px;
+  font-size: 18px;
+  letter-spacing: 0.4px;
+}
+
+.metric,
+.small {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.metric {
+  margin-top: 4px;
+}
+
+.pill {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: white;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-size: 12px;
+  backdrop-filter: blur(8px);
+}
+
+#powerPanel { grid-column: 2; grid-row: 2; }
+#clubPanel { grid-column: 2; grid-row: 3; }
+#modePanel { grid-column: 1; grid-row: 2; max-width: 380px; }
+#powerBar {
+  margin-top: 8px;
+  width: 100%;
+  height: 14px;
+  border-radius: 999px;
+  background: rgba(30, 41, 59, 0.8);
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.25);
+}
+
+#powerFill {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, #22c55e, #86efac);
+  transition: width 60ms linear;
+}
+
+#clubButtons {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+#clubButtons button {
+  background: rgba(15,23,42,0.5);
+  color: #e2e8f0;
+  border: 1px solid rgba(148,163,184,0.35);
+  border-radius: 8px;
+  padding: 8px;
+  text-align: left;
+  cursor: pointer;
+}
+#clubButtons button.active,
+#clubButtons button:hover {
+  background: linear-gradient(90deg, rgba(34,197,94,0.25), rgba(16,185,129,0.2));
+  border-color: rgba(34,197,94,0.8);
+}
+
+.mode-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.mode-buttons button {
+  flex: 1;
+  background: rgba(15,23,42,0.5);
+  border: 1px solid rgba(148,163,184,0.4);
+  color: #e2e8f0;
+  border-radius: 999px;
+  padding: 8px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.mode-buttons button.active {
+  border-color: #38bdf8;
+  background: linear-gradient(90deg, rgba(56,189,248,0.3), rgba(14,165,233,0.2));
+}
+
+#windIndicatorWrap {
+  position: fixed;
+  left: 24px;
+  bottom: 28px;
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  border: 2px dashed rgba(226,232,240,0.3);
+  pointer-events: none;
+}
+
+#windNeedle {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 2px;
+  height: 36px;
+  background: linear-gradient(180deg, #22c55e 0%, rgba(34,197,94,0));
+  transform-origin: center 100%;
+  transform: translate(-50%, -100%) rotate(0deg);
+}
+
+#windNeedle::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: -4px;
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 12px solid #67e8f9;
+}
+
+#controlsHint {
+  grid-column: 2;
+  grid-row: 4;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 11px;
+  color: #cbd5e1;
+}
+
+#controlsHint span {
+  background: rgba(15,23,42,0.55);
+  border: 1px solid rgba(148,163,184,0.35);
+  border-radius: 999px;
+  padding: 6px 10px;
+}
+
+@media (max-width: 900px) {
+  #ui {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto;
+    gap: 10px;
+  }
+  #powerPanel, #clubPanel, #modePanel, #controlsHint { grid-column: 1; width: 100%; }
+  #powerPanel { grid-row: 2; }
+  #clubPanel { grid-row: 3; max-width: 360px; }
+  #modePanel { grid-row: 4; max-width: 360px; }
+  #controlsHint { grid-row: 5; }
+}

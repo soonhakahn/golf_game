@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Imperial 3D Golf</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="scene-overlay"></div>
+
+  <main id="ui">
+    <header class="hud-row">
+      <div class="pill">Mode: <span id="modeLabel">Practice</span></div>
+      <div class="pill">Stroke: <span id="strokeCount">0</span></div>
+      <div class="pill">Par: <span id="parValue">4</span></div>
+      <div class="pill">Hole: <span id="holeIndex">1</span></div>
+    </header>
+
+    <section class="panel">
+      <h1>3D Golf Experience</h1>
+      <div id="wind" class="metric">Wind: <span id="windText">0.00</span> m/s</div>
+      <div id="distance" class="metric">Distance to hole: <span id="distanceValue">0</span>m</div>
+      <div id="cameraMode" class="metric">Camera: <span id="cameraModeValue">Aiming</span></div>
+      <div id="message" class="status">Press <b>1-4</b> to select club. Hold <b>Space</b> to swing.</div>
+    </section>
+
+    <section class="panel" id="powerPanel">
+      <div class="power-title">Power Meter</div>
+      <div id="powerBar">
+        <div id="powerFill"></div>
+      </div>
+      <div class="small">Power: <span id="powerValue">0</span>%</div>
+    </section>
+
+    <section class="panel" id="clubPanel">
+      <div class="power-title">Clubs</div>
+      <div id="clubButtons"></div>
+      <div class="small">Accuracy: <span id="clubAccuracy">0</span>% · Spin: <span id="clubSpin">0</span></div>
+    </section>
+
+    <section class="panel" id="modePanel">
+      <div class="power-title">Game Mode</div>
+      <div class="mode-buttons">
+        <button data-mode="practice" class="active">Practice</button>
+        <button data-mode="tournament">Tournament</button>
+        <button data-mode="challenge">Challenge</button>
+      </div>
+      <div id="modeHint" class="small">Press <b>C</b> to cycle camera. Press <b>R</b> to reset ball.</div>
+      <div id="modeInfo" class="small">Tournament: 3 holes · Challenge: higher wind and strict stroke limit.</div>
+    </section>
+
+    <section id="windIndicatorWrap">
+      <div id="windNeedle"></div>
+    </section>
+
+    <div id="controlsHint" class="controls-hint">
+      <span><b>A/D</b> Aim left/right</span>
+      <span><b>W/S</b> Club loft</span>
+      <span><b>Space</b> Charge Swing</span>
+      <span><b>Mouse</b> hold/release to swing</span>
+    </div>
+  </main>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
