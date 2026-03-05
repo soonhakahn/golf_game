@@ -667,6 +667,7 @@ class GolfGame {
     this.ui.mountClubs(CLUBS, (c) => this.selectClub(c), this.currentClub);
     this.applyEventHooks();
     this.setupModeButtons();
+    this.setupUiToggle();
     this.updateModeSettings();
 
     this.playerBall.mesh.position.copy(HOLY_STYLES[0].start);
@@ -928,6 +929,26 @@ class GolfGame {
         this.selectMode(el.dataset.mode);
       });
     });
+  }
+
+  setupUiToggle() {
+    const btn = document.getElementById('toggleUiBtn');
+    if (!btn) return;
+
+    const setCollapsed = (collapsed) => {
+      document.body.classList.toggle('ui-collapsed', collapsed);
+      btn.textContent = collapsed ? 'UI 보이기' : 'UI 숨기기';
+    };
+
+    btn.addEventListener('click', () => {
+      const collapsed = !document.body.classList.contains('ui-collapsed');
+      setCollapsed(collapsed);
+    });
+
+    // Mobile 기본값: 시야 확보를 위해 조정 UI를 접은 상태로 시작
+    if (window.matchMedia('(max-width: 900px)').matches) {
+      setCollapsed(true);
+    }
   }
 
   applyEventHooks() {
