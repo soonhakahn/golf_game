@@ -1010,6 +1010,44 @@ class GolfGame {
     bindHold('aimRightBtn', () => this.input.keys.add('KeyD'), () => this.input.keys.delete('KeyD'));
     bindHold('loftDownBtn', () => this.input.keys.add('KeyS'), () => this.input.keys.delete('KeyS'));
     bindHold('loftUpBtn', () => this.input.keys.add('KeyW'), () => this.input.keys.delete('KeyW'));
+
+    // Swipe-to-aim: drag horizontally on the game area (excluding UI/buttons)
+    let dragActive = false;
+    let lastX = 0;
+    const isGameArea = (target) => !target?.closest?.('button, .panel, #startOverlay, #mobileControlPad, #toggleUiBtn');
+    const startDrag = (clientX, target) => {
+      if (!this.hasStarted || !isGameArea(target)) return;
+      dragActive = true;
+      lastX = clientX;
+    };
+    const moveDrag = (clientX) => {
+      if (!dragActive) return;
+      const dx = clientX - lastX;
+      lastX = clientX;
+      this.input.aim -= dx * 0.008;
+    };
+    const endDrag = () => { dragActive = false; };
+
+    window.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      startDrag(e.clientX, e.target);
+    }, { passive: true });
+    window.addEventListener('pointermove', (e) => moveDrag(e.clientX), { passive: true });
+    window.addEventListener('pointerup', endDrag, { passive: true });
+    window.addEventListener('pointercancel', endDrag, { passive: true });
+
+    window.addEventListener('touchstart', (e) => {
+      const t = e.changedTouches?.[0];
+      if (!t) return;
+      startDrag(t.clientX, e.target);
+    }, { passive: true });
+    window.addEventListener('touchmove', (e) => {
+      const t = e.changedTouches?.[0];
+      if (!t) return;
+      moveDrag(t.clientX);
+    }, { passive: true });
+    window.addEventListener('touchend', endDrag, { passive: true });
+    window.addEventListener('touchcancel', endDrag, { passive: true });
   }
 
   applyEventHooks() {
