@@ -208,7 +208,7 @@ class Terrain {
     if (inBunker1 || inBunker2) return 'bunker';
 
     for (const g of greens) {
-      if (g.distanceToPoint(new THREE.Vector2(x, z)) < 22) return 'green';
+      if (g.distanceTo(new THREE.Vector2(x, z)) < 22) return 'green';
     }
 
     const dH = Math.max(0, new THREE.Vector2(x, z).distanceTo(new THREE.Vector2(hole.x, hole.z)));
