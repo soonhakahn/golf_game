@@ -961,9 +961,21 @@ class GolfGame {
       return;
     }
 
-    const startGame = () => {
-      this.hasStarted = true;
+    const hideOverlay = () => {
       overlay.classList.add('hidden');
+      overlay.style.display = 'none';
+      overlay.setAttribute('aria-hidden', 'true');
+    };
+
+    const startGame = (e) => {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      if (this.hasStarted) return;
+      this.hasStarted = true;
+      hideOverlay();
+      setTimeout(hideOverlay, 300);
       document.body.classList.add('ui-collapsed');
       const toggleBtn = document.getElementById('toggleUiBtn');
       if (toggleBtn) toggleBtn.textContent = 'UI 보이기';
@@ -971,8 +983,9 @@ class GolfGame {
       this.ui.setMessage('게임 시작! ⛳ 스윙 버튼을 눌러 샷하세요.', '#a7f3d0');
     };
 
-    startBtn.addEventListener('click', startGame);
-    startBtn.addEventListener('touchstart', (e) => { e.preventDefault(); }, { passive: false });
+    startBtn.addEventListener('click', startGame, { passive: false });
+    startBtn.addEventListener('pointerup', startGame, { passive: false });
+    startBtn.addEventListener('touchend', startGame, { passive: false });
   }
 
   applyEventHooks() {
