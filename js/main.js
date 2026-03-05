@@ -943,21 +943,41 @@ class GolfGame {
       }
     });
 
-    window.addEventListener('mousedown', () => {
-      if (!this.audio.started) this.audio.ensure();
-      this.swing.onPointerDown();
-    });
+    const canStartSwingFromTarget = (target) => {
+      if (!target) return true;
+      const interactive = target.closest?.('button, a, input, select, textarea, #ui');
+      return !interactive;
+    };
 
-    window.addEventListener('mouseup', () => {
+    const onPressStart = (target) => {
+      this.audio.ensure();
+      if (!canStartSwingFromTarget(target)) return;
+      this.swing.onPointerDown();
+    };
+
+    const onPressEnd = () => {
       this.swing.onPointerUp();
+    };
+
+    window.addEventListener('mousedown', (e) => onPressStart(e.target));
+    window.addEventListener('mouseup', onPressEnd);
+
+    // iOS/Safari: pointer/touch support so taps can start and release swing.
+    window.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      onPressStart(e.target);
     });
+    window.addEventListener('pointerup', onPressEnd);
+    window.addEventListener('pointercancel', onPressEnd);
+
+    window.addEventListener('touchstart', (e) => {
+      onPressStart(e.target);
+    }, { passive: true });
+    window.addEventListener('touchend', onPressEnd, { passive: true });
+    window.addEventListener('touchcancel', onPressEnd, { passive: true });
 
     const panelEl = document.querySelector('#ui');
     panelEl.addEventListener('mousedown', (e) => e.preventDefault(), { passive: true });
-
-    window.addEventListener('pointerdown', () => {
-      this.audio.ensure();
-    }, { once: true });
   }
 
   cycleCamera() {
