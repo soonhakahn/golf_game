@@ -978,6 +978,30 @@ class GolfGame {
 
     const panelEl = document.querySelector('#ui');
     panelEl.addEventListener('mousedown', (e) => e.preventDefault(), { passive: true });
+
+    const mobileSwingBtn = document.getElementById('mobileSwingBtn');
+    if (mobileSwingBtn) {
+      const pressStart = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.audio.ensure();
+        this.swing.onPointerDown();
+      };
+      const pressEnd = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.swing.onPointerUp();
+      };
+      mobileSwingBtn.addEventListener('pointerdown', pressStart);
+      mobileSwingBtn.addEventListener('pointerup', pressEnd);
+      mobileSwingBtn.addEventListener('pointercancel', pressEnd);
+      mobileSwingBtn.addEventListener('touchstart', pressStart, { passive: false });
+      mobileSwingBtn.addEventListener('touchend', pressEnd, { passive: false });
+      mobileSwingBtn.addEventListener('touchcancel', pressEnd, { passive: false });
+      mobileSwingBtn.addEventListener('mousedown', pressStart);
+      mobileSwingBtn.addEventListener('mouseup', pressEnd);
+      mobileSwingBtn.addEventListener('mouseleave', pressEnd);
+    }
   }
 
   cycleCamera() {
