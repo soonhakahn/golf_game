@@ -682,8 +682,9 @@ class GolfGame {
     this.renderer.setClearColor(0x050b14, 1);
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    document.body.appendChild(this.renderer.domElement);
+    document.body.appendChild(this.renderer.domElement);     const c = this.renderer.domElement;     c.style.position = 'fixed';     c.style.inset = '0';     c.style.zIndex = '1';
 
+        c.style.position = 'fixed'; c.style.inset = '0'; c.style.zIndex = '1';
     this.scene.fog = new THREE.Fog(0x0b1320, 100, 460);
 
     // Ground (animated vertex terrain).
