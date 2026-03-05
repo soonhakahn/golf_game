@@ -650,6 +650,7 @@ class GolfGame {
     this.particles = new ParticleManager(this.scene);
     this.currentMode = 'practice';
     this.currentClub = CLUBS[0];
+    this.hasStarted = false;
     this.holeIndex = 0;
     this.strokeCount = 0;
     this.maxStrokes = Infinity;
@@ -668,6 +669,7 @@ class GolfGame {
     this.applyEventHooks();
     this.setupModeButtons();
     this.setupUiToggle();
+    this.setupStartFlow();
     this.updateModeSettings();
 
     this.playerBall.mesh.position.copy(HOLY_STYLES[0].start);
@@ -951,6 +953,28 @@ class GolfGame {
     }
   }
 
+  setupStartFlow() {
+    const overlay = document.getElementById('startOverlay');
+    const startBtn = document.getElementById('startGameBtn');
+    if (!overlay || !startBtn) {
+      this.hasStarted = true;
+      return;
+    }
+
+    const startGame = () => {
+      this.hasStarted = true;
+      overlay.classList.add('hidden');
+      document.body.classList.add('ui-collapsed');
+      const toggleBtn = document.getElementById('toggleUiBtn');
+      if (toggleBtn) toggleBtn.textContent = 'UI 보이기';
+      this.audio.ensure();
+      this.ui.setMessage('게임 시작! ⛳ 스윙 버튼을 눌러 샷하세요.', '#a7f3d0');
+    };
+
+    startBtn.addEventListener('click', startGame);
+    startBtn.addEventListener('touchstart', (e) => { e.preventDefault(); }, { passive: false });
+  }
+
   applyEventHooks() {
     this.swing.powerDownCb = (power) => this.releaseShot(power);
 
@@ -1142,6 +1166,11 @@ class GolfGame {
   }
 
   releaseShot(power) {
+    if (!this.hasStarted) {
+      this.ui.setMessage('먼저 게임 시작 버튼을 눌러주세요.', '#fcd34d');
+      return;
+    }
+
     if (this.physics.isMoving || this.resetInProgress || this.isAimingLocked()) {
       this.debug(`releaseShot blocked moving=${this.physics.isMoving} reset=${!!this.resetInProgress} lock=${this.isAimingLocked()}`);
       return;

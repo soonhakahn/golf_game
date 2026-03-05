@@ -45,6 +45,42 @@ canvas {
   z-index: 0;
 }
 
+#startOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+#startOverlay.hidden { display: none; }
+
+.start-card {
+  width: min(92vw, 360px);
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  border-radius: 14px;
+  padding: 18px;
+  text-align: center;
+  pointer-events: auto;
+}
+
+.start-card h2 { margin: 0 0 8px; }
+.start-card p { margin: 0 0 14px; color: #cbd5e1; font-size: 13px; }
+
+#startGameBtn {
+  width: 100%;
+  border: 0;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+  color: #052e16;
+  font-weight: 800;
+  padding: 12px 14px;
+  font-size: 15px;
+}
+
 #ui {
   position: fixed;
   inset: 0;

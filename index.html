@@ -9,6 +9,14 @@
 <body>
   <div id="scene-overlay"></div>
 
+  <div id="startOverlay" role="dialog" aria-label="게임 시작">
+    <div class="start-card">
+      <h2>Imperial 3D Golf</h2>
+      <p>클럽/모드 설정 후 아래 버튼으로 시작하세요.</p>
+      <button id="startGameBtn" aria-label="게임 시작">게임 시작</button>
+    </div>
+  </div>
+
   <main id="ui">
     <header class="hud-row">
       <div class="pill">Mode: <span id="modeLabel">Practice</span></div>
@@ -65,6 +73,6 @@
     <div id="debugPanel" aria-live="polite"></div>
   </main>
 
-  <script type="module" src="js/main.js?v=uifix1"></script>
+  <script type="module" src="js/main.js?v=startflow2"></script>
 </body>
 </html>
