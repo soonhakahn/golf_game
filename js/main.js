@@ -629,6 +629,10 @@ class UIGame {
 
 class GolfGame {
   constructor() {
+    this.debugEnabled = new URLSearchParams(window.location.search).has('debug');
+    this.debugEl = document.getElementById('debugPanel');
+    this.debugLines = [];
+
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(52, innerWidth / innerHeight, 0.1, 900);
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -673,7 +677,16 @@ class GolfGame {
     this.ui.updateClub(this.currentClub);
     this.physics.resetVel();
 
+    this.debug('game init complete');
     this.animate();
+  }
+
+  debug(text) {
+    if (!this.debugEnabled || !this.debugEl) return;
+    const line = `[${new Date().toLocaleTimeString()}] ${text}`;
+    this.debugLines.push(line);
+    if (this.debugLines.length > 10) this.debugLines.shift();
+    this.debugEl.textContent = this.debugLines.join('\n');
   }
 
   setupScene() {
@@ -951,11 +964,16 @@ class GolfGame {
 
     const onPressStart = (target) => {
       this.audio.ensure();
-      if (!canStartSwingFromTarget(target)) return;
+      if (!canStartSwingFromTarget(target)) {
+        this.debug('pressStart ignored on UI element');
+        return;
+      }
+      this.debug('pressStart accepted');
       this.swing.onPointerDown();
     };
 
     const onPressEnd = () => {
+      this.debug(`pressEnd power=${this.swing.power.toFixed(1)}`);
       this.swing.onPointerUp();
     };
 
@@ -985,11 +1003,13 @@ class GolfGame {
         e.preventDefault();
         e.stopPropagation();
         this.audio.ensure();
+        this.debug('mobileSwingBtn start');
         this.swing.onPointerDown();
       };
       const pressEnd = (e) => {
         e.preventDefault();
         e.stopPropagation();
+        this.debug(`mobileSwingBtn end power=${this.swing.power.toFixed(1)}`);
         this.swing.onPointerUp();
       };
       mobileSwingBtn.addEventListener('pointerdown', pressStart);
@@ -1101,13 +1121,19 @@ class GolfGame {
   }
 
   releaseShot(power) {
-    if (this.physics.isMoving || this.resetInProgress || this.isAimingLocked()) return;
+    if (this.physics.isMoving || this.resetInProgress || this.isAimingLocked()) {
+      this.debug(`releaseShot blocked moving=${this.physics.isMoving} reset=${!!this.resetInProgress} lock=${this.isAimingLocked()}`);
+      return;
+    }
 
     const aimFactor = THREE.MathUtils.clamp(power / 100, 0.06, 1);
     if (aimFactor < 0.05) {
+      this.debug(`releaseShot too weak power=${power.toFixed(1)}`);
       this.ui.setMessage('Build more power before releasing.');
       return;
     }
+
+    this.debug(`releaseShot accepted power=${power.toFixed(1)}`);
 
     const aimAngle = this.swingAim;
 
@@ -1335,5 +1361,9 @@ function randomUnitSphere() {
   );
 }
 
-window.__createGolfGame = () => new GolfGame();
+window.__createGolfGame = () => {
+  const game = new GolfGame();
+  window.__golfGame = game;
+  return game;
+};
 window.__createGolfGame();
