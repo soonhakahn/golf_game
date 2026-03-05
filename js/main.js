@@ -670,6 +670,7 @@ class GolfGame {
     this.setupModeButtons();
     this.setupUiToggle();
     this.setupStartFlow();
+    this.setupMobileControls();
     this.updateModeSettings();
 
     this.playerBall.mesh.position.copy(HOLY_STYLES[0].start);
@@ -980,12 +981,35 @@ class GolfGame {
       const toggleBtn = document.getElementById('toggleUiBtn');
       if (toggleBtn) toggleBtn.textContent = 'UI 보이기';
       this.audio.ensure();
-      this.ui.setMessage('게임 시작! ⛳ 스윙 버튼을 눌러 샷하세요.', '#a7f3d0');
+      this.ui.setMessage('게임 시작! ⛳ 왼쪽 패드로 방향/탄도 조정 후 스윙하세요.', '#a7f3d0');
     };
 
     startBtn.addEventListener('click', startGame, { passive: false });
     startBtn.addEventListener('pointerup', startGame, { passive: false });
     startBtn.addEventListener('touchend', startGame, { passive: false });
+  }
+
+  setupMobileControls() {
+    const bindHold = (id, onStart, onEnd) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const start = (e) => { e.preventDefault(); e.stopPropagation(); onStart(); };
+      const end = (e) => { if (e) { e.preventDefault(); e.stopPropagation(); } onEnd(); };
+      el.addEventListener('pointerdown', start, { passive: false });
+      el.addEventListener('pointerup', end, { passive: false });
+      el.addEventListener('pointercancel', end, { passive: false });
+      el.addEventListener('touchstart', start, { passive: false });
+      el.addEventListener('touchend', end, { passive: false });
+      el.addEventListener('touchcancel', end, { passive: false });
+      el.addEventListener('mousedown', start);
+      el.addEventListener('mouseup', end);
+      el.addEventListener('mouseleave', end);
+    };
+
+    bindHold('aimLeftBtn', () => this.input.keys.add('KeyA'), () => this.input.keys.delete('KeyA'));
+    bindHold('aimRightBtn', () => this.input.keys.add('KeyD'), () => this.input.keys.delete('KeyD'));
+    bindHold('loftDownBtn', () => this.input.keys.add('KeyS'), () => this.input.keys.delete('KeyS'));
+    bindHold('loftUpBtn', () => this.input.keys.add('KeyW'), () => this.input.keys.delete('KeyW'));
   }
 
   applyEventHooks() {
